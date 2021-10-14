@@ -5,15 +5,15 @@ import com.example.demo.dto.out.Shoes;
 import com.example.demo.facade.ShoeFacade;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 
-@RestController
-@RequestMapping(path = "/shoes")
+@Controller
+@RequestMapping(path = "/shoes-v2")
 @RequiredArgsConstructor
-public class ShoeController {
+public class ShoeControllerV2 {
 
     private final ShoeFacade shoeFacade;
 
