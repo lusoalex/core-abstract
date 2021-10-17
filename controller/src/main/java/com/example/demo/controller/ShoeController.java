@@ -5,10 +5,7 @@ import com.example.demo.dto.out.Shoes;
 import com.example.demo.facade.ShoeFacade;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping(path = "/shoes")
@@ -17,6 +14,7 @@ public class ShoeController {
 
     private final ShoeFacade shoeFacade;
 
+    @ResponseBody
     @GetMapping(path = "/search")
     public ResponseEntity<Shoes> all(ShoeFilter filter, @RequestHeader Integer version) {
 

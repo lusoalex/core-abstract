@@ -8,13 +8,14 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
-@Entity
-@Builder
 @Getter
 @Setter
+@Entity
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class Stock {
@@ -30,7 +31,7 @@ public class Stock {
     @JsonProperty("shoes")
     @OneToMany(mappedBy = "stock")
     @JsonSerialize(using = StockSetSerializer.class)
-    private Set<StockShoe> stockShoeSet;
+    private final Set<StockShoe> stockShoeSet = new HashSet<>();
 
     /**
      * @return the current stock state

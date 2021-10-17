@@ -1,26 +1,36 @@
 package com.example.demo.controller;
 
-import com.example.demo.dto.in.ShoeFilter;
-import com.example.demo.dto.out.Shoes;
-import com.example.demo.facade.ShoeFacade;
+import com.example.demo.dto.Shoe;
+import com.example.demo.repository.ShoeRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Controller
 @RequestMapping(path = "/shoes-v2")
 @RequiredArgsConstructor
 public class ShoeControllerV2 {
 
-    private final ShoeFacade shoeFacade;
+    private final ShoeRepository shoeRepository;
 
-    @GetMapping(path = "/search")
-    public ResponseEntity<Shoes> all(ShoeFilter filter, @RequestHeader Integer version) {
+    @GetMapping
+    @ResponseBody
+    public List<Shoe> all() {
 
-        return ResponseEntity.ok(shoeFacade.get(version).search(filter));
+        return shoeRepository.findAll();
+
+    }
+
+    @PostMapping
+    @ResponseBody
+    @ResponseStatus(HttpStatus.CREATED)
+    public Shoe addShoe(@RequestBody @Validated Shoe shoe) {
+
+        return shoeRepository.save(shoe);
 
     }
 
