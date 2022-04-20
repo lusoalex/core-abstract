@@ -1,17 +1,16 @@
 package com.example.demo.controller;
 
+import com.example.demo.dto.in.StockFilter;
 import com.example.demo.dto.out.StockDto;
-import com.example.demo.dto.out.StockShoeDto;
+import com.example.demo.exceptions.GeneralException;
 import com.example.demo.facade.StockFacade;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import javax.validation.Valid;
 
 @Controller
 @RequestMapping(path = "/stock")
@@ -20,19 +19,14 @@ public class StockController {
 
   private final StockFacade stockFacade;
 
-  @GetMapping(path = "/")
-  public ResponseEntity<StockDto> all(@RequestHeader Integer version){
-    return ResponseEntity.ok(stockFacade.get(version).getAll());
+  @GetMapping
+  public ResponseEntity<StockDto> all(@Valid @RequestBody StockFilter filter, @RequestHeader Integer version){
+    return ResponseEntity.ok(stockFacade.get(version).getAll(filter.getName()));
   }
 
-  @PatchMapping(path = "/")
-  public ResponseEntity<StockDto> update(List<StockShoeDto> shoes, @RequestHeader Integer version){
-    try {
-      return ResponseEntity.ok(stockFacade.get(version).updateStock(shoes));
-    } catch (Exception e) {
-      throw new RuntimeException(e);
-    }
+  @PatchMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<StockDto> update(@Valid @RequestBody StockFilter filter, @RequestHeader Integer version) throws GeneralException{
+    return ResponseEntity.ok(stockFacade.get(version).updateStock(filter.getName(), filter.getShoes()));
   }
-
 
 }
