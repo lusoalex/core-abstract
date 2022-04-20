@@ -7,5 +7,5 @@ import java.util.List;
 
 public interface IStockCore {
   StockDto getAll();
-  StockDto updateStock(List<StockShoeDto> shoes) throws Exception;
+  StockDto updateStock(String name, List<StockShoeDto> shoes) throws Exception;
 }
