@@ -1,0 +1,15 @@
+{
+  "name": "test",
+  "shoes": [
+    {
+      "size": 42,
+      "color": "BLUE",
+      "quantity": 15
+    },
+    {
+      "size": 41,
+      "color": "BLACK",
+      "quantity": 10
+    }
+  ]
+}
