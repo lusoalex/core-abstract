@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 import lombok.Builder;
 import lombok.Value;
 
+import java.math.BigInteger;
 import java.util.List;
 
 @Value
@@ -24,6 +25,19 @@ public class StockDto {
     SOME,
     ;
 
+  }
+
+  public StockDto calculateState() {
+    int totalQuantity = shoes.stream().map(StockShoeDto::getQuantity).reduce(BigInteger.ZERO, BigInteger::add).intValue();
+    State state1;
+    if (totalQuantity >= 30) {
+      state1 = State.FULL;
+    } else if (totalQuantity > 0) {
+      state1 = State.SOME;
+    } else {
+      state1 = State.EMPTY;
+    }
+    return builder().shoes(shoes).state(state1).build();
   }
 
   @JsonPOJOBuilder(withPrefix = "")
