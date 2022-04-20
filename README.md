@@ -14,6 +14,7 @@
 - [Validating the application](#validating-the-application)
   - [Version 1](#version-1)
   - [Version 2](#version-2)
+  - [Stock endpoint](#stock-endpoint)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -374,6 +375,171 @@ which should answer (see `com.example.demo.core.ShoeCoreNew.search`):
 ```json
 {"shoes":[{"name":"New shoe","size":2,"color":"BLACK"}]}
 ```
+
+## Stock endpoint
+
+To test the new Stock endpoint, there is four cases :
+
+# case 1 : Empty stock
+
+You can call :
+
+```shell script
+curl -X GET http://localhost:8080/stock -H 'version: 2' -d '{"name": "test"}'
+```
+which should answer :
+
+```json
+{"state": "EMPTY", "shoes": []}
+```
+
+# case 2 : Stock has some shoes
+
+You can start by adding some shoes to the empty stock with :
+
+```shell script
+curl -X PATCH http://localhost:8080/stock -H 'version: 2' -H 'Content-Type: application/json' -d '{
+    "name": "test",
+    "shoes": [
+        {
+            "size": 42,
+            "color": "BLUE",
+            "quantity": 5
+        },
+        {
+            "size": 41,
+            "color": "BLACK",
+            "quantity": 0
+        }
+    ]
+}'
+```
+
+And then you can call :
+
+```shell script
+curl -X GET http://localhost:8080/stock -H 'version: 2' -d '{"name": "test"}'
+```
+which should answer :
+
+```json
+{
+  "state": "SOME",
+  "shoes": [
+    {
+      "size": 42,
+      "color": "BLUE",
+      "quantity": 5
+    },
+    {
+      "size": 41,
+      "color": "BLACK",
+      "quantity": 0
+    }
+  ]
+}
+```
+
+# case 3 : Stock is full
+
+You can start by adding some shoes to the empty stock with :
+
+```shell script
+curl -X PATCH http://localhost:8080/stock -H 'version: 2' -H 'Content-Type: application/json' -d '{
+    "name": "test",
+    "shoes": [
+        {
+            "size": 42,
+            "color": "BLUE",
+            "quantity": 15
+        },
+        {
+            "size": 41,
+            "color": "BLACK",
+            "quantity": 15
+        }
+    ]
+}'
+```
+
+And then you can call :
+
+```shell script
+curl -X GET http://localhost:8080/stock -H 'version: 2' -d '{"name": "test"}'
+```
+which should answer :
+
+```json
+{
+  "state": "FULL",
+  "shoes": [
+    {
+      "size": 42,
+      "color": "BLUE",
+      "quantity": 15
+    },
+    {
+      "size": 41,
+      "color": "BLACK",
+      "quantity": 15
+    }
+  ]
+}
+```
+
+# case 4 : An error
+
+Today the stock endpoint handle three kind of errors :
+- CapacityExceededException (see `com.example.demo.exceptions.CapacityExceededException`)
+- FullStockException (see `com.example.demo.exceptions.FullStockException`)
+- MinimumCapacityException (see `com.example.demo.exceptions.MinimumCapacityException`)
+
+And to see how these errors are handled see `com.example.demo.core.StockCoreImpl.checkStore`
+
+And let's try to simulate an error for example the `CapacityExceededException` and to do that, you can call :
+
+```shell script
+curl -X PATCH http://localhost:8080/stock -H 'version: 2' -H 'Content-Type: application/json' -d '{
+    "name": "test",
+    "shoes": [
+        {
+            "size": 42,
+            "color": "BLUE",
+            "quantity": 10
+        },
+        {
+            "size": 41,
+            "color": "BLACK",
+            "quantity": 15
+        }
+    ]
+}'
+```
+
+And then you can call :
+
+```shell script
+curl -X PATCH http://localhost:8080/stock -H 'version: 2' -H 'Content-Type: application/json' -d '{
+    "name": "test",
+    "shoes": [
+        {
+            "size": 42,
+            "color": "BLUE",
+            "quantity": 10
+        }
+    ]
+}'
+```
+which should answer :
+
+```json
+{"message":"You can not add more than 5","status":"400","code":"ERR-0001"}
+```
+
+# Datasets
+
+To do more tests, you can reference to the files in this directory :
+[JSON files to do test](controller/src/test/resources)
 
 # Conclusion
 

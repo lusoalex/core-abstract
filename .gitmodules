@@ -4,3 +4,6 @@
 [submodule "core-new"]
 	path = core-new
 	url = git@github.com:lusoalex/core-new.git
+[submodule "core-stock"]
+	path = core-stock
+	url = git@github.com:Allali84/core-stock.git
