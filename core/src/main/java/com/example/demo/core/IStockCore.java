@@ -6,6 +6,6 @@ import com.example.demo.dto.out.StockShoeDto;
 import java.util.List;
 
 public interface IStockCore {
-  StockDto getAll();
+  StockDto getAll(String name);
   StockDto updateStock(String name, List<StockShoeDto> shoes) throws Exception;
 }
