@@ -505,7 +505,7 @@ curl -X PATCH http://localhost:8080/stock -H 'version: 2' -H 'Content-Type: appl
         {
             "size": 42,
             "color": "BLUE",
-            "quantity": 15
+            "quantity": 10
         },
         {
             "size": 41,
@@ -525,7 +525,7 @@ curl -X PATCH http://localhost:8080/stock -H 'version: 2' -H 'Content-Type: appl
         {
             "size": 42,
             "color": "BLUE",
-            "quantity": 5
+            "quantity": 10
         }
     ]
 }'
